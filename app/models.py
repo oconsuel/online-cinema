@@ -35,7 +35,7 @@ class Movies(db.Model): #таблица фильмы
     rating_sum = db.Column(db.Integer, default=0)
     rating_num = db.Column(db.Integer, default=0)
     poster_id = db.Column(db.String(36), db.ForeignKey('exam_posters.id'), nullable=False)
-    poster = db.relationship('Poster', backref='movies')
+    poster = db.relationship('Posters', backref='movies')
     genres = db.relationship('Genres', secondary=genres, backref=db.backref('movies', lazy='dynamic'))
 
     def __repr__(self):
