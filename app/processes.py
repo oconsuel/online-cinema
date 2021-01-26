@@ -27,7 +27,7 @@ def create():
     b_img = request.files.get('background_img') 
     img = None
     if b_img and b_img.filename:
-        img_saver = PostersSaver(f)
+        img_saver = PostersSaver(b_img)
         img = img_saver.save()
 
     description = bleach.clean(request.form.get('description'))

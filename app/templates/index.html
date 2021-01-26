@@ -42,8 +42,8 @@
                     Опубликовано в <b>{{movie.production_year}}</b>
                 </p>
                 <p class="card-text">
-                    {% for genre in movie.genres %}
-                    <span class="badge badge-dark p-2">Жанр: {{ genre.name }}</span>
+                    Жанр:{% for genre in movie.genres %}
+                    <span class=" p-2"><b>{{ genre.name }}</b></span>
                     {% endfor %} 
                 </p>
                 <a href="" class="btn btn-primary">Читать дальше &rarr;</a>

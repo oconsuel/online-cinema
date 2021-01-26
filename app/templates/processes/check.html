@@ -20,7 +20,7 @@
     <section class="sec1" style="background-color: #fdf5e6;">
         <div class="projdesc"></div>
         <div class="container">
-            <div><img class="img-fluid w-100" src="{{ movie.poster.url }}" alt="..." style="height: 400px; width: 100px;"></div>
+            <img class="img-fluid w-100" src="{{ movie.poster.url }}" alt="...">
             <div class="info-menu">
                 <h2 class="mb-3 text-center font-weight-bold">О фильме</h2>
                 <p>{{ movie.html | safe }}</p>
@@ -59,7 +59,7 @@
                             </tr>
                             <tr>
                                 <td>Сценарист: </td>
-                                <td>{{ movie.scenarist }}</td>
+                                <td>{{ movie.screenwriter }}</td>
                             </tr>
                             <tr>
                                 <td>Актёры: </td>
