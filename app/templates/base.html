@@ -43,6 +43,14 @@
                             <a class="nav-link" href="#">2</a>
                         </li>
                     </ul>
+                    {% if current_user.is_authenticated %}
+                    <span class="navbar-text px-5">
+                        {{ current_user.full_name }}
+                    </span>
+                    <a href="{{ url_for('auth.logout') }}" class="btn btn-light">Выйти</a>
+                    {% else %}
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-light">Войти</a>
+                    {% endif %}
                 </div>
         </nav>
 

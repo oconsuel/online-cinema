@@ -5,6 +5,7 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 import markdown
 from app import db
+from users_policy import UsersPolicy
 from sqlalchemy.dialects import mysql
 
 
@@ -41,12 +42,6 @@ class Movies(db.Model): #таблица фильмы
     def __repr__(self):
         return '<Movies %r>' % self.name
 
-    @property
-    def rating(self):
-        if self.rating_num > 0:
-            return self.rating_sum/self.rating_num
-        else:
-            return 0
 
 #таблица с постерами
 class Posters(db.Model):
@@ -62,7 +57,7 @@ class Posters(db.Model):
 
     @property
     def url(self):
-        return url_for('Posters', poster_id=self.id)
+        return url_for('image', image_id=self.id)
 
     @property
     def storage_filename(self):
@@ -109,6 +104,14 @@ class Users(db.Model, UserMixin): #Таблица пользоватлеи
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+    
+    def can(self, action, record=None):
+        policy = UsersPolicy(record=record)
+        method = getattr(policy, action, None)
+        if method:
+            return method()
+        return False
+
 
 class Roles(db.Model): #Таблица роли
     __tablename__ = 'exam_roles'

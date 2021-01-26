@@ -29,8 +29,6 @@ from auth import bp as auth_bp, init_login_manager
 init_login_manager(app)
 
 app.register_blueprint(auth_bp)
-
-
 app.register_blueprint(processes_bp)
 
 @app.route('/')

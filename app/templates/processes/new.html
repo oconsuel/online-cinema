@@ -1,73 +1,12 @@
 {% extends 'base.html' %}
+{% from 'processes/update_form.html' import render_text_form %}
 
 {% block content %}
-<div class="container">
-    <h2 class="my-3 text-center text-uppercase font-weight-bold">Создание/обновление курса</h2>
 
-    <form method="POST" action="" enctype="multipart/form-data">
-        <input type="hidden" name="author_id" value="{{ current_user.id }}">
-        <div class="form-group row">
-            <div class="col-md-6 d-flex flex-column">
-                <div class="form-group">
-                    <label for="name">Название</label>
-                    <input class="form-control" type="text" name="name" id="name" {% if movie %}value="{{ movie.name }}"{% endif %}>
-                </div>
-                <div class="form-group">
-                    <label for="category">Страна</label>
-                    <select class="form-control" name="category_id" id="category">
-                            <option value="{{ movie.name }}">{{ movie.name }}</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="teachers">Режисер</label>
-                    <select class="form-control selectpicker" data-live-search="true" name="teachers_ids" id="teachers" multiple>
-                            <option value="">{{ movie.producer }}</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="teachers">Сценарист</label>
-                    <select class="form-control selectpicker" data-live-search="true" name="teachers_ids" id="teachers" multiple>
-                            <option value="">{{ movie.scenarist }}</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="teachers">Актеры</label>
-                    <select class="form-control selectpicker" data-live-search="true" name="teachers_ids" id="teachers" multiple>
-                            <option value="">{{ movie.actors }}</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="teachers">Продолжительность</label>
-                    <select class="form-control selectpicker" data-live-search="true" name="teachers_ids" id="teachers" multiple>
-                            <option value="">{{ movie.duration }}</option>
-                    </select>
-                </div>
-                <div class="form-group d-flex flex-column flex-grow-1">
-                    <label for="short_description">Краткое описание</label>
-                    <textarea class="form-control flex-grow-1" name="short_desc" id="short_description" cols="30" rows="5"></textarea>
-                </div>
-            </div>
-            <div class="col-md-6 d-flex flex-column">
-                <div class="form-group">
-                    <label for="background_img">Фоновое изображение</label>
-                    <input class="form-control" type="file" name="background_img" id="background_img">
-                </div>
-                <div class="form-group background-preview p-3 rounded d-flex align-items-center justify-content-center">
-                    <img src="" class="img-fluid d-none" alt="">
-                    <label for="background_img" class="btn btn-primary">Выбрать изображение</label>
-                </div>
-            </div>
-        </div>
+<h2 class="text-center font-weight-bold">Добавление фильма</h2>
 
-
-        <div class="form-group">
-            <label for="full_description">Полное описание</label>
-            <textarea class="form-control" name="full_desc" id="full_description" cols="30" rows="10"></textarea>
-        </div>
-
-        <div class="form-group text-center">
-            <input type="submit" class="btn btn-primary" value="Сохранить">
-        </div>
-    </form>
+<div class="container-fluid w-75">
+    {{ render_text_form(movie={}, genres=genres) }}
 </div>
+
 {% endblock %}
