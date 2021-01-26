@@ -25,11 +25,13 @@ migrate = Migrate(app, db)
 from models import Movies, Posters
 from processes import bp as processes_bp
 from auth import bp as auth_bp, init_login_manager
+from reviews import bp as reviews_bp
 
 init_login_manager(app)
 
 app.register_blueprint(auth_bp)
 app.register_blueprint(processes_bp)
+app.register_blueprint(reviews_bp)
 
 @app.route('/')
 def index():

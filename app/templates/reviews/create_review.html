@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2 class="text-center font-weight-bold">Оставить рецензию</h2>
+
+
+<div class="filter my-5 p-3 bg-dark rounded">
+    <form method="POST" action="{{ url_for('processes.create_review', movie_id=movie_id) }}" class="row align-items-center">
+        <div class="col-sm-12 mb-3 col-md-6 mb-md-0">
+            <label for="text-content" style="color: white;">Введите текст в формате Markdown</label>
+            <textarea class="form-control" name="text" id="text-content" cols="30" rows="10"></textarea>
+        </div>
+        
+        <div class="col-sm-12 mb-3 col-md-4 mb-md-0">
+            <label for="FormControlSelect1" style="color: white;">Ваша оценка</label>
+            <select class="form-control mb-2" id="FormControlSelect1" name="rating">
+                <option selected value="5">Отлично</option>
+                <option value="4">Хорошо</option>
+                <option value="3">Удовлетворительно</option>
+                <option value="2"> Неудовлетворительно</option>
+                <option value="1">Плохо</option>
+                <option value="0">Ужасно</option>
+            </select>
+        </div>
+        <div class="col-sm-12 mb-3 col-md-2 mb-md-0">
+            <label for="FormControlSelect1"></label>
+            <button type="submit" class="btn btn-primary w-100 mt-auto">Оставить рецензию</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

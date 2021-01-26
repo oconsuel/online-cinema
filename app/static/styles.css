@@ -7,9 +7,7 @@
     margin-top: 80px !important; 
 }
 
-.footer {
-    height: 100px;
-} 
+ 
 
 
 
@@ -21,7 +19,7 @@
 
 section{
     padding: 100px 0;
-    background-color: #403F4C;
+    background-color: #343a40;
 }
 
 .section-title{

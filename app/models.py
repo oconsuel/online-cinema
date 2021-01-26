@@ -71,6 +71,7 @@ class Reviews(db.Model): #таблица рецензии
     __tablename__ = 'exam_reviews'
 
     id = db.Column(db.Integer, primary_key=True)
+    
 
     movie_id = db.Column(db.Integer, db.ForeignKey('exam_movies.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('exam_users.id'), nullable=False)
@@ -79,9 +80,14 @@ class Reviews(db.Model): #таблица рецензии
     created_at = db.Column(db.DateTime, nullable=False, server_default=sa.sql.func.now())
     movie = db.relationship('Movies', backref='reviews')
     user = db.relationship('Users', backref='reviews')
+    status = db.Column(db.String(128), db.ForeignKey('exam_statuses.name'), nullable=False, default='На рассмотрении')
 
     def __repr__(self):
-        return '<Reviews %r>' % self.name
+        return '<Reviews %r>' % self.status
+    
+    @property
+    def html(self):
+        return markdown.markdown(self.text)
 
 class Users(db.Model, UserMixin): #Таблица пользоватлеи
     __tablename__ = 'exam_users'
@@ -125,3 +131,8 @@ class Roles(db.Model): #Таблица роли
 
     def __repr__(self):
         return '<Roles %r>' % self.name
+
+class Status(db.Model):
+    __tablename__ = 'exam_statuses'
+
+    name = db.Column(db.String(128), primary_key=True)

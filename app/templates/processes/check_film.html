@@ -20,7 +20,7 @@
     <section class="sec1" style="background-color: #fdf5e6;">
         <div class="projdesc"></div>
         <div class="container">
-            <div><img class="img-fluid w-100" src="{{ movie.poster.url }}" alt="..." style="height: 400px; width: 100px;"></div>
+            <div><img class="" src="{{ movie.poster.url }}" alt="..." style="height: 400px; width: 338px;"></div>
             <div class="info-menu">
                 <h2 class="mb-3 text-center font-weight-bold">О фильме</h2>
                 <p>{{ movie.html | safe }}</p>
@@ -40,12 +40,6 @@
                     <div class="table-scrollable">
 
                     <table class="table table-scrollable" style="color: #f2f2f2; font-weight: bold;">
-                        <thead style="background-color: #ce5353;">
-                            <tr>
-                                <th></th>
-                                <th></th>
-                            </tr>
-                        </thead>
                         <tbody>
                             {% for people in teams %}
                             <tr>
@@ -74,6 +68,43 @@
                 </div>
             </div>
         </div>
+    </section>
+    <section class="comments mb-5">
+        <h2 class="mb-3 text-center font-weight-bold text-light">Рецензии</h2>
+        {% for review in (ncur|sort(attribute='created_at', reverse = True))[:5] %}
+        <div class="card mt-3">
+            <h5 class="card-header">{{ review.user.full_name }}</h5>
+            <div class="card-body">
+                <p class="card-text">{{ review.html | safe }}</p>
+                <h3><span class="badge badge-dark text-light"> ★ {{ review.rating }}</span></h3>
+                <div class="text-muted mt-2">{{ review.created_at }}</div>
+            </div>
+        </div>
+        {% endfor %}
+        {% if current_user.is_authenticated and cur %}
+        <div class="card mt-3 text-right">
+            <h5 class="card-header">Ваша рецензия</h5>
+            <div class="card-body">
+                <p class="card-text">{{ cur.html | safe }}</p>
+                <h3><span class="badge badge-dark">★ {{ cur.rating }}</span></h3>
+                <div class="text-muted mt-2 mb-2">{{ cur.created_at }}</div>
+                {% if cur.status == 'На рассмотрении' %}<h4><span class="badge badge-secondary">На рассмотрении</span></h4>{% endif %}
+                {% if cur.status == 'Одобрено' %}<h4><span class="badge badge-success">Одобрена</span></h4>{% endif %}
+                {% if cur.status == 'Отклонено' %}<h4><span class="badge badge-danger">Отклонена</span></h4>{% endif %}
+            </div>
+        </div>
+        {% else %}
+        {% if ncur or cur %}
+        {% else %}
+        <p class="text-center text-light">Рецензии отсутствуют</p>
+        {% endif %}
+        {% if current_user.is_authenticated %}
+        <div class="container text-center  my-3 mb-5">
+            <a href="{{ url_for('processes.create_review', movie_id=movie.id ) }}" class="btn btn-light btn-lg">Написать
+                рецензию</a>
+        </div>
+        {% endif %}
+        {% endif %}
     </section>
     
 </div>

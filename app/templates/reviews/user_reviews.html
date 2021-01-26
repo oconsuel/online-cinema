@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% from 'pagination.html' import render_pagination %}
+
+{% block content %}
+
+<h1 class="my-5 text-center">Мои рецензии</h1>
+
+{% for review in reviews %}
+<div class="card mb-3 text-left w-75 mx-auto">
+    <h5 class="card-header">{{ review.movie.name }}</h5>
+    <div class="card-body">
+        <p class="card-text">{{ review.html | safe }}</p>
+        <h3><span class="badge badge-dark text-light"> ★ {{ review.rating }}</span></h3>
+        <div class="text-muted mt-2">{{ review.created_at }}</div>
+        {% if review.is_moderated == 'На рассмотрении' %}<h4><span class="badge badge-secondary">На рассмотрении</span></h4>{% endif %}
+        {% if review.is_moderated == 'Одобрено' %}<h4><span class="badge badge-success">Одобрена</span></h4>{% endif %}
+        {% if review.is_moderated == 'Отклонено' %}<h4><span class="badge badge-danger">Отклонена</span></h4>{% endif %}
+    </div>
+</div>
+{% endfor %}
+
+{% if reviews|list|length > 0 %}
+{{ render_pagination(pagination, request.endpoint) }}
+{% else %}
+<p class="text-center">Рецензии отсутствуют</p>
+{% endif %}
+{% endblock %}

@@ -7,6 +7,7 @@ from auth import check_rights
 from tools import PostersSaver
 from config import UPLOAD_FOLDER
 from app import db
+from sqlalchemy import exc
 
 bp = Blueprint('processes', __name__, url_prefix='/processes')
 
@@ -20,6 +21,26 @@ def params():
 def review_params():
     return { p: request.form.get(p) for p in PERMITTED_REVIEW_PARAMS }
 
+@bp.route('/read/<int:movie_id>/create_review', methods=['POST', 'GET'])
+@login_required
+def create_review(movie_id):
+    movie = Movies.query.get(movie_id)
+
+    if request.method == "POST":
+        review = Reviews(**review_params())
+        review.text = bleach.clean(request.form.get('text'))
+        db.session.add(review)
+        db.session.commit()
+        movie.rating_num = movie.rating_num+1
+        movie.rating_sum = movie.rating_sum+int(request.form.get('rating'))
+        db.session.add(movie)
+        db.session.commit()
+        flash("Рецензия успешно оставлена", "success")
+
+        return redirect(url_for('processes.read', movie_id=movie_id))
+
+    return render_template('reviews/create_review.html', movie_id=movie_id)
+
 @bp.route('/create', methods=['POST'])
 @login_required
 @check_rights('create_movie')
@@ -30,14 +51,34 @@ def create():
         img_saver = PostersSaver(b_img)
         img = img_saver.save()
 
+    if img == None:
+        flash(f'Ошибка создания фильма! Нельзя добавить один постер к двум фильмам!', 'danger')
+        return redirect(url_for('processes.create'))
+
     description = bleach.clean(request.form.get('description'))
     genres = request.form.getlist('genre_ids')
     movie = Movies(**params(), poster_id=img.id, description=description)
-    db.session.add(movie)
-    db.session.commit()
 
-    if img:
-        img_saver.bind_to_object(movie)
+    try:
+        movie = Movie(**params(), poster_id=img.id, description=description)
+        if img:
+            img_saver.bind_to_object(movie)
+    except:
+        db.session.rollback()
+        flash(f'Ошибка!Повторите ввод!', 'danger')
+        return redirect(url_for('crud.create'))
+
+    try:
+        db.session.add(movie)
+
+        for genre_id in genres:
+            genre = Genre.query.filter(Genre.id == genre_id).first()
+            movie.genres.append(genre)
+
+        db.session.commit()
+    except exc.DBAPIError or exc.SQLAlchemyError or exc.DatabaseError: 
+        flash(f'Ошибка создания фильма! Извините, внесите данные снова :(', 'danger')
+        return redirect(url_for('crud.create'))
 
     flash(f'Фильм {movie.name} был успешно создан!', 'success')
 
@@ -65,7 +106,7 @@ def read(movie_id):
             if current_user.id == review.user_id:
                 currentuser = review
             else:
-                if review.is_moderated:
+                if review.status:
                     ncur.append(review)
     else:
         notcurr = movie.reviews

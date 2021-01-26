@@ -32,16 +32,16 @@
                     aria-label="Toggle navigation"></button>
                 <div class="collapse navbar-collapse" id="collapsibleNavId">
                     <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
-                        <li class="nav-item {% if request.endpoint == 'index' %}active{% endif %}">
-                            <a class="nav-link" href="#">Главная</a>
+                        {% if current_user.is_authenticated and current_user.role.name == 'moder' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('reviews.unmoderated') }}">Модерация рецензий</a>
                         </li>
-                        <li class="nav-item {% if request.endpoint == 'users' %}active{% endif %}">
-                            <a class="nav-link" href="#">1</a>
+                        {% endif %}
+                        {% if current_user.is_authenticated and current_user.role.name == 'user' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('reviews.user_reviews') }}">Мои рецензии</a>
                         </li>
-                        <li
-                            class="nav-item {% if request.endpoint == 'visits.logs' or request.endpoint == 'visits.pages_stat' or request.endpoint == 'visits.users_stat' %}active{% endif %}">
-                            <a class="nav-link" href="#">2</a>
-                        </li>
+                        {% endif %}
                     </ul>
                     {% if current_user.is_authenticated %}
                     <span class="navbar-text px-5">
@@ -73,12 +73,14 @@
             <h1>Содержимое по умолчанию</h1>
             {% endblock %}
         </div>
-
-        <footer class="footer p-3 text-center bg-dark mt-auto">
-            <h3 class="text-light">Филиппович 191-351</h3>
-        </footer>
     </div>
-
+    <footer class="footer bg-dark text-white d-flex align-items-center mt-auto py-5">
+        <div class="container">
+            <div class="text-center">
+                &copy; Филиппович 191-351
+            </div>
+        </div>
+    </footer>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
         crossorigin="anonymous"></script>

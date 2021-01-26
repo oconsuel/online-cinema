@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="card mb-3 text-left w-75 mx-auto my-auto">
+    <h5 class="card-header">{{ review.movie.name }} | {{ review.user.full_name }}</h5>
+    <div class="card-body">
+        <p class="card-text">{{ review.html | safe }}</p>
+        <h3><span class="badge badge-dark text-light"> ★ {{ review.rating }}</span></h3>
+        <div class="text-muted mt-2">{{ review.created_at }}</div>
+        <div class="btn-group w-100 mt-3" role="group" aria-label="Basic example">
+            <a href="{{ url_for('reviews.confirm_cancel', review_id=review.id, confirm='false') }}" type="button" class="btn btn-danger">Отклонить</a>
+            <a href="{{ url_for('reviews.confirm_cancel', review_id=review.id, confirm='true') }}" type="button" class="btn btn-success">Одобрить</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
