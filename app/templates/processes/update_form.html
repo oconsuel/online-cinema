@@ -1,5 +1,5 @@
 {% macro render_text_form(movie, genres) %}
-<form method="POST" action="{% if movie %}{{ url_for('processes.update_q', movie_id=movie.id) }}{% else %}{{ url_for('processes.create') }}{% endif %}" enctype="multipart/form-data">
+<form method="POST" action="{% if movie %}{{ url_for('processes.update', movie_id=movie.id) }}{% else %}{{ url_for('processes.create') }}{% endif %}" enctype="multipart/form-data">
     <div class="form-group row">
         <div class="col-md-6 d-flex flex-column">
             <div class="form-group pt-3">
@@ -42,17 +42,17 @@
         {% if movie %}
         <div class="col-md-1 d-flex flex-column"></div>
         <div class="col-md-4 d-flex flex-column">
-            <img src="" class="pt-4 img-fluid h-100" alt="">
+            <img src="{% if request.endpoint == 'processes.update' %}{{ url_for('image', image_id = movie.poster_id) }}{% endif %}" class="img-fluid" class="pt-4 img-fluid h-100" alt="">
         </div>
         {% else %}
         <div class="col-md-6 d-flex flex-column">
             <div class="form-group">
                 <label for="background_img">Фоновое изображение</label>
-                <input class="form-control-file" type="file" name="background_img" id="background_img" hidden>
+                <input class="form-control-file" type="file" name="background_img" id="background_img">
             </div>
             <div
                 class="form-group background-preview p-3 rounded d-flex align-items-center justify-content-center">
-                <img src="" class="img-fluid d-none" alt="">
+                <img src="" class="d-none img-fluid" alt="">
                 <label for="background_img" class="btn btn-dark">Выбрать изображение</label>
             </div>
         </div>

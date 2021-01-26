@@ -13,8 +13,6 @@ bp = Blueprint('processes', __name__, url_prefix='/processes')
 PERMITTED_PARAMS = ['name', 'production_year', 'country', 'producer', 'scenarist', 'actors', 'duration']
 PERMITTED_REVIEW_PARAMS = ['user_id', 'movie_id', 'text', 'rating']
 
-PER_PAGE = 5
-
 def params():
     return { p: request.form.get(p) for p in PERMITTED_PARAMS }
 
@@ -26,13 +24,14 @@ def review_params():
 @login_required
 @check_rights('create_movie')
 def create():
-    f = request.files.get('background_img') 
+    b_img = request.files.get('background_img') 
     img = None
-    if f and f.filename:
+    if b_img and b_img.filename:
         img_saver = PostersSaver(f)
         img = img_saver.save()
 
     description = bleach.clean(request.form.get('description'))
+    genres = request.form.getlist('genre_ids')
     movie = Movies(**params(), poster_id=img.id, description=description)
     db.session.add(movie)
     db.session.commit()
@@ -42,7 +41,7 @@ def create():
 
     flash(f'Фильм {movie.name} был успешно создан!', 'success')
 
-    return redirect(url_for('index'))
+    return redirect(url_for('processes.read', movie_id=movie.id))
 
 @bp.route('/new')
 @login_required
@@ -80,45 +79,39 @@ def read(movie_id):
 def update(movie_id):
     movie = Movies.query.get(movie_id)
     genres = Genres.query.all()
-    return render_template('processes/update.html', movie=movie, genres=genres)
-
-
-
-
-@bp.route('<int:course_id>/reviews', methods=['GET','POST'])
-def reviews(course_id):
-    course = Course.query.get(course_id)
     
     if request.method == "POST":
-        review = Review(**review_params())
-        db.session.add(review)
+        description = bleach.clean(request.form.get('description'))
+        genres = request.form.getlist('genre_ids')
+        movie.name = request.form.get('name')
+        movie.production_year = request.form.get('production_year')
+        movie.country = request.form.get('country')
+        movie.producer = request.form.get('producer')
+        movie.scenarist = request.form.get('scenarist')
+        movie.actors = request.form.get('actors')
+        movie.duration = request.form.get('duration')
+        movie.description = description
+        
+        temp_genres = []
+        for i in movie.genres:
+            temp_genres.append(i)
+
+        for genre_id_del in temp_genres:
+            print('remove' + str(genre_id_del))
+            genre_del = Genres.query.filter(Genres.name == genre_id_del.name).first()
+            movie.genres.remove(genre_del)
+        db.session.add(movie)
+        for genre_id_add in genres:
+            genre_add = Genres.query.filter(Genres.id == genre_id_add).first()
+            if genre_add not in movie.genres:
+                movie.genres.append(genre_add)
+
         db.session.commit()
-        course.rating_num = course.rating_num+1
-        course.rating_sum = course.rating_sum+int(request.form.get('rating'))
-        db.session.add(course)
-        db.session.commit()
-        flash("Отзыв успешно оставлен", "success")
-
-        return  redirect(url_for('courses.reviews',course_id=course_id, course=course))
+        flash(f'Фильм {movie.name} был успешно обновлён!', 'success')
+        return redirect(url_for('processes.read', movie_id=movie_id))
 
 
-    page = request.args.get('page', 1, type=int)
-    review_filter = ReviewsFilter(**search_review_params(course_id))
-    rewiews = review_filter.perform()
-
-    curse = None
-    for review in rewiews:
-        if current_user.is_authenticated:
-            if current_user.id == review.user_id:
-                curse = review
-
-    if current_user.is_authenticated and curse:
-        rewiews = rewiews.filter(Review.user_id != curse.user_id)
-    pagination = rewiews.paginate(page, PER_PAGE)
-    rewiews = pagination.items
-
-    return render_template('/courses/reviews.html', course=course, rewiews=rewiews,curse=curse, pagination=pagination, search_params=search_review_params(course_id), course_id=course_id
-    )
+    return render_template('processes/update.html', movie=movie, genres=genres)
 
 @bp.route('/delete/<int:movie_id>', methods=['POST'])
 @login_required

@@ -39,8 +39,12 @@
             <div class="card-body">
                 <h5 class="card-title">{{movie.name}}</h5>
                 <p class="card-text">
-                    Опубликовано {{movie.production_year}}
-                    Автор: Влад
+                    Опубликовано в <b>{{movie.production_year}}</b>
+                </p>
+                <p class="card-text">
+                    {% for genre in movie.genres %}
+                    <span class="badge badge-dark p-2">Жанр: {{ genre.name }}</span>
+                    {% endfor %} 
                 </p>
                 <a href="" class="btn btn-primary">Читать дальше &rarr;</a>
             </div>

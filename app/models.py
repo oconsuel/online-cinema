@@ -42,6 +42,9 @@ class Movies(db.Model): #таблица фильмы
     def __repr__(self):
         return '<Movies %r>' % self.name
 
+    @property
+    def html(self):
+        return markdown.markdown(self.description)
 
 #таблица с постерами
 class Posters(db.Model):

@@ -4,7 +4,7 @@
 <div class="card mb-3 w-100 mx-auto">
     <div class="row no-gutters">
         <div class="col">
-            <img class="img-fluid w-100" src="" alt="...">
+            <img class="img-fluid w-100" src="{{ movie.poster.url }}" alt="...">
         </div>
         <div class="col my-auto">
             <div class="card-body">
@@ -12,8 +12,9 @@
                 <p class="card-text">
                 <p class="mb-5 mx-auto h2 text-center">
                     {{ movie.production_year }} |
-                    <span class="">Жанр</span>
-                    | <span>★</span>Рейтинг<span></span>
+                    {% for genre in movie.genres %}
+                    <span class="">{{ genre.name }}</span>
+                    {% endfor %} | <span>★</span>Рейтинг<span></span>
                 </p>
                 <section class="about mb-5 h4 mt-5 w-50 mx-auto text-center">
                     <p><b>Страна производства:</b><br>{{ movie.country }}</p>

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% from 'processes/update_form.html' import render_text_form %}
+
+{% block content %}
+
+<h2 class="text-center font-weight-bold">Обновление фильма</h2>
+
+<div class="container-fluid w-75">
+    {{ render_text_form(movie=movie, genres=genres) }}
+</div>
+
+{% endblock %}
