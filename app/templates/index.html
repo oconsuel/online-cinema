@@ -22,8 +22,11 @@
                     | <span class=" p-2"><b>{{ genre.name }}</b></span> |
                     {% endfor %} 
                 </p>
+                <p class="card-text">
+                    Рейтинг: 
+                </p>
                 <a href="{{ url_for('processes.read', movie_id=movie.id) }}" type="button"
-                        class="btn btn-primary">Подробнее</a>
+                        class="btn" style="background-color: #343a40; color: #f2f2f2;">Подробнее</a>
             </div>
             {% if current_user.is_authenticated and (current_user.role.name == 'admin' or
             current_user.role.name == 'moder') %}

@@ -1,19 +1,20 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="" style="margin-top: 120px; ">
+<div class=" w-100" style="margin-top: 120px; ">
     <section id="about">
         <div class="inner-width">
             <h1 class="section-title name_project mb-0">{{ movie.name }}</h1>
             <div class="heading-line mx-auto w-100 mb-3"></div>
-            
+
             <div class="about-content">
                 <div class="about-text">
-                    <h2 class="text-center mb-5">{{ movie.production_year }} | 
+                    <h2 class="text-center mb-5">{{ movie.production_year }} |
                         {% for genre in movie.genres %}
-                            <span class="">{{ genre.name }}</span>
-                        {% endfor %} | <span>★</span>Рейтинг<span></span></h2>
-                </div> 
+                        <span class="">{{ genre.name }}</span>
+                        {% endfor %} | <span>★</span>Рейтинг<span></span>
+                    </h2>
+                </div>
             </div>
         </div>
     </section>
@@ -39,73 +40,87 @@
                     <h1 class="section-title name_project" style="margin-bottom: 30px;">Подробнее</h1>
                     <div class="table-scrollable">
 
-                    <table class="table table-scrollable" style="color: #f2f2f2; font-weight: bold;">
-                        <tbody>
-                            {% for people in teams %}
-                            <tr>
-                                <td>Страна производства:</td>
-                                <td>{{ movie.country }}</td>
-                            </tr>
-                            {% endfor %}
-                            <tr>
-                                <td>Продюсер: </td>
-                                <td>{{ movie.producer }}</td>
-                            </tr>
-                            <tr>
-                                <td>Сценарист: </td>
-                                <td>{{ movie.scenarist }}</td>
-                            </tr>
-                            <tr>
-                                <td>Актёры: </td>
-                                <td>{{ movie.actors }}</td>
-                            </tr><tr>
-                                <td>Продолжительность: </td>
-                                <td>{{ movie.duration }} мин.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                        <table class="table table-scrollable" style="color: #f2f2f2; font-weight: bold;">
+                            <tbody>
+                                {% for people in teams %}
+                                <tr>
+                                    <td>Страна производства:</td>
+                                    <td>{{ movie.country }}</td>
+                                </tr>
+                                {% endfor %}
+                                <tr>
+                                    <td>Продюсер: </td>
+                                    <td>{{ movie.producer }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Сценарист: </td>
+                                    <td>{{ movie.scenarist }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Актёры: </td>
+                                    <td>{{ movie.actors }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Продолжительность: </td>
+                                    <td>{{ movie.duration }} мин.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
-    <section class="comments mb-5">
-        <h2 class="mb-3 text-center font-weight-bold text-light">Рецензии</h2>
-        {% for review in (ncur|sort(attribute='created_at', reverse = True))[:5] %}
-        <div class="card mt-3">
-            <h5 class="card-header">{{ review.user.full_name }}</h5>
-            <div class="card-body">
-                <p class="card-text">{{ review.html | safe }}</p>
-                <h3><span class="badge badge-dark text-light"> ★ {{ review.rating }}</span></h3>
-                <div class="text-muted mt-2">{{ review.created_at }}</div>
+
+
+</div>
+<div class="card mt-3 pt-3 col-md-12">
+    {% for review in (notcurr|sort(attribute='created_at', reverse = True))[:5] %}
+    <div class="card media mb-2 p-2">
+        <div class="pt-2 pb-2" style="display:flex">
+            <img class="p-4 rounded-circle" src="" alt="Generic placeholder image">
+            <div class="media-body">
+                <h5 class="mt-0">{{ review.user.full_name }}</h5>
+                <p class=" pl-2 rounded">{{ review.html | safe }}</p>
+                <p>Рейтинг: {{ review.rating }}</p>
+                <p>Дата создания {{ review.created_at }}</p>
             </div>
         </div>
         {% endfor %}
-        {% if current_user.is_authenticated and cur %}
-        <div class="card mt-3 text-right">
-            <h5 class="card-header">Ваша рецензия</h5>
-            <div class="card-body">
-                <p class="card-text">{{ cur.html | safe }}</p>
-                <h3><span class="badge badge-dark">★ {{ cur.rating }}</span></h3>
-                <div class="text-muted mt-2 mb-2">{{ cur.created_at }}</div>
-                {% if cur.status == 'На рассмотрении' %}<h4><span class="badge badge-secondary">На рассмотрении</span></h4>{% endif %}
-                {% if cur.status == 'Одобрено' %}<h4><span class="badge badge-success">Одобрена</span></h4>{% endif %}
-                {% if cur.status == 'Отклонено' %}<h4><span class="badge badge-danger">Отклонена</span></h4>{% endif %}
+        {% if current_user.is_authenticated and currentuser %}
+        <div class="media flex-wrap">
+            <div class="col-md-12 pl-5">
+                <div class="" style="display:flex">
+                    <a class="pr-4" href="#">
+                        <img class="p-4 rounded-circle " src="" alt="Generic placeholder image">
+                    </a>
+                    <div class="media-body">
+                        <h5 class="mt-0">Ваша рецензия</h5>
+                        <p class="bg-light pl-2 rounded ">{{ currentuser.html | safe }}</p>
+                        <p>Статус: {% if currentuser.status == 'На рассмотрении' %}
+                        <h4><span class="badge badge-secondary">На рассмотрении</span></h4>{% endif %}
+                        {% if currentuser.status == 'Одобрено' %}<h4><span class="badge badge-success">Одобрена</span>
+                        </h4>{% endif %}
+                        {% if currentuser.status == 'Отклонено' %}<h4><span class="badge badge-danger">Отклонена</span>
+                        </h4>{% endif %}</p>
+                        <p>{{ currentuser.created_at }}</p>
+                    </div>
+                </div>
             </div>
+            {% else %}
+            {% if notcurr or currentuser %}
+            {% else %}
+            <p class="text-center text-light">Рецензии отсутствуют</p>
+            {% endif %}
+            {% if current_user.is_authenticated %}
+            <div class="container text-center  my-3 mb-5">
+                <a href="{{ url_for('processes.create_review', movie_id=movie.id ) }}"
+                    class="btn btn-dark btn-lg">Написать
+                    рецензию</a>
+            </div>
+            {% endif %}
+            {% endif %}
         </div>
-        {% else %}
-        {% if ncur or cur %}
-        {% else %}
-        <p class="text-center text-light">Рецензии отсутствуют</p>
-        {% endif %}
-        {% if current_user.is_authenticated %}
-        <div class="container text-center  my-3 mb-5">
-            <a href="{{ url_for('processes.create_review', movie_id=movie.id ) }}" class="btn btn-light btn-lg">Написать
-                рецензию</a>
-        </div>
-        {% endif %}
-        {% endif %}
-    </section>
-    
+    </div>
 </div>
 {% endblock %}
