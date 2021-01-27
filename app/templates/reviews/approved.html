@@ -1,18 +1,38 @@
-{% extends 'reviews/base.html' %}
+{% extends 'base.html' %}
 {% from 'pagination.html' import render_pagination %}
 
-{% block tab_content %}
-
-{% for review in reviews %}
-<div class="card mb-3 text-left">
-    <h5 class="card-header">{{ review.movie.name }}  |  {{ review.user.full_name }}</h5>
-    <div class="card-body">
-        <p class="card-text">{{ review.html | safe }}</p>
-        <h3><span class="badge badge-dark text-light"> ★ {{ review.rating }}</span></h3>
-        <div class="text-muted mt-2">{{ review.created_at }}</div>
-    </div>
+{% block content %}
+<div class="btn-group w-100" style="border-color: #f2f2f2;">
+    <a href="{{ url_for('reviews.unmoderated') }}" type="button" class="btn btn-dark col-md-4 {% if request.endpoint == 'reviews.unmoderated' %}active{% endif %}">Обновить</a>
+    <a href="{{ url_for('reviews.approved') }}" type="button" class="btn btn-dark col-md-4 {% if request.endpoint == 'reviews.approved' %}active{% endif %}">Одобрено</a>
+    <a href="{{ url_for('reviews.rejected') }}" type="button" class="btn btn-dark col-md-4 {% if request.endpoint == 'reviews.rejected' %}active{% endif %}">Отклонено</a>
 </div>
-{% endfor %}
+<section class="d-flex flex-column " style="margin-bottom: 30px; padding-bottom: 30px;" id="part">
+    <div style="flex-grow: 2" class="d-flex" id="wrapper">
+        <div id="page-content-wrapper" style="width: 100% !important;">
+            <div class="container-fluid px-3 px-md-5 pb-5">
+                <h1 class="section-title name_project" style="margin-bottom: 30px;">В ожидании</h1>
+                <div class="table-scrollable">
+
+                <table class="table table-scrollable" style="color: #f2f2f2; font-weight: bold;">
+                    <tbody>
+                        {% for review in reviews %}
+                        <tr>
+                            <td>{{ review.movie.name }}</td>
+                            <td>{{ review.user.full_name }}</td>
+                            <td>{{ review.rating }}</td>
+                            <td>{{ review.html | safe }}</td>
+                            <td>{{ review.created_at }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 
 {% if reviews|list|length > 0 %}
 {{ render_pagination(pagination, request.endpoint) }}

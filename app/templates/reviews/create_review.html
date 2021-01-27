@@ -6,7 +6,8 @@
 
 
 <div class="filter my-5 p-3 bg-dark rounded">
-    <form method="POST" action="{{ url_for('processes.create_review', movie_id=movie_id) }}" class="row align-items-center">
+    <form method="POST" action="{{ url_for('processes.create_review', movie_id=movie_id, user_id=current_user.id) }}" class="row align-items-center">
+        <input type="hidden" name="movie_id" value="{{ movie_id }}">
         <div class="col-sm-12 mb-3 col-md-6 mb-md-0">
             <label for="text-content" style="color: white;">Введите текст в формате Markdown</label>
             <textarea class="form-control" name="text" id="text-content" cols="30" rows="10"></textarea>

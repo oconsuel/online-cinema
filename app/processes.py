@@ -27,7 +27,9 @@ def create_review(movie_id):
     movie = Movies.query.get(movie_id)
 
     if request.method == "POST":
-        review = Reviews(**review_params())
+        p = review_params()
+        p['user_id'] = current_user.id
+        review = Reviews(**p)
         review.text = bleach.clean(request.form.get('text'))
         db.session.add(review)
         db.session.commit()
@@ -107,7 +109,7 @@ def read(movie_id):
                 currentuser = review
             else:
                 if review.status:
-                    ncur.append(review)
+                    notcurr.append(review)
     else:
         notcurr = movie.reviews
     

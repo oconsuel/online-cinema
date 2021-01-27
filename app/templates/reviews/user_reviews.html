@@ -3,25 +3,41 @@
 
 {% block content %}
 
-<h1 class="my-5 text-center">Мои рецензии</h1>
+<section class="d-flex flex-column " id="part">
+    <div style="flex-grow: 2" class="d-flex" id="wrapper">
+        <div id="page-content-wrapper" style="width: 100% !important;">
+            <div class="container-fluid px-3 px-md-5 pb-5">
+                <h1 class="section-title name_project" style="margin-bottom: 30px;">Мои рецензии</h1>
+                <div class="table-scrollable">
 
-{% for review in reviews %}
-<div class="card mb-3 text-left w-75 mx-auto">
-    <h5 class="card-header">{{ review.movie.name }}</h5>
-    <div class="card-body">
-        <p class="card-text">{{ review.html | safe }}</p>
-        <h3><span class="badge badge-dark text-light"> ★ {{ review.rating }}</span></h3>
-        <div class="text-muted mt-2">{{ review.created_at }}</div>
-        {% if review.is_moderated == 'На рассмотрении' %}<h4><span class="badge badge-secondary">На рассмотрении</span></h4>{% endif %}
-        {% if review.is_moderated == 'Одобрено' %}<h4><span class="badge badge-success">Одобрена</span></h4>{% endif %}
-        {% if review.is_moderated == 'Отклонено' %}<h4><span class="badge badge-danger">Отклонена</span></h4>{% endif %}
+                <table class="table table-scrollable" style="color: #f2f2f2; font-weight: bold;">
+                    <tbody>
+                        {% for review in reviews %}
+                        <tr>
+                            <td>{{ review.movie.name }}</td>
+                            <td>{{ review.rating }}</td>
+                            <td>{{ review.created_at }}</td>
+                            <td>{{ review.html | safe }}</td>
+                            <td>
+                                {% if review.status == 'На рассмотрении' %}<h4><span class="badge badge-secondary">На рассмотрении</span></h4>{% endif %}
+                                {% if review.status == 'Одобрено' %}<h4><span class="badge badge-success">Одобрена</span></h4>{% endif %}
+                                {% if review.status == 'Отклонено' %}<h4><span class="badge badge-danger">Отклонена</span></h4>{% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            </div>
+        </div>
     </div>
-</div>
-{% endfor %}
+</section>
 
 {% if reviews|list|length > 0 %}
 {{ render_pagination(pagination, request.endpoint) }}
 {% else %}
 <p class="text-center">Рецензии отсутствуют</p>
 {% endif %}
+
 {% endblock %}
+

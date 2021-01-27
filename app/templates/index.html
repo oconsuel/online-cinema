@@ -25,7 +25,8 @@
                 <a href="{{ url_for('processes.read', movie_id=movie.id) }}" type="button"
                         class="btn btn-primary">Подробнее</a>
             </div>
-            {% if current_user.is_authenticated %}
+            {% if current_user.is_authenticated and (current_user.role.name == 'admin' or
+            current_user.role.name == 'moder') %}
             <div class="card-footer">
                 <div class="btn-group w-100" role="group" aria-label="Basic example">
                     {% if current_user.is_authenticated and (current_user.role.name == 'admin' or
